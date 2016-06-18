@@ -74,4 +74,3 @@ modules/views/
 *.swp
 
 #webpack
-/bundle
