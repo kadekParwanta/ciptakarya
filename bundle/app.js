@@ -99,7 +99,7 @@
 	
 	    var req = __webpack_require__(29);
 	    req.keys().map(req);
-	    req = __webpack_require__(54);
+	    req = __webpack_require__(48);
 	    req.keys().map(req);
 	
 	    angular.module('mean', packageModules);
@@ -61036,14 +61036,10 @@
 		"./custom/ciptakarya/public/index.js": 33,
 		"./custom/ciptakarya/public/routes/system.js": 40,
 		"./custom/ciptakarya/public/routes/users.js": 41,
-		"./custom/plan/public/controllers/plan.js": 42,
-		"./custom/plan/public/index.js": 43,
-		"./custom/plan/public/routes/plan.js": 46,
-		"./custom/plan/public/services/plan.js": 47,
-		"./custom/rencana/public/controllers/rencana.js": 48,
-		"./custom/rencana/public/index.js": 49,
-		"./custom/rencana/public/routes/rencana.js": 52,
-		"./custom/rencana/public/services/rencana.js": 53
+		"./custom/rencana/public/controllers/rencana.js": 42,
+		"./custom/rencana/public/index.js": 43,
+		"./custom/rencana/public/routes/rencana.js": 46,
+		"./custom/rencana/public/services/rencana.js": 47
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -61421,204 +61417,6 @@
 	
 	    /* jshint -W098 */
 	
-	    function PlanController($scope, Global, Plans, $stateParams, $location) {
-	        $scope.global = Global;
-	        $scope.package = {
-	            name: 'plan'
-	        };
-	
-	        $scope.checkCircle = function () {
-	            Plan.checkCircle($stateParams.circle).then(function (response) {
-	                $scope.res = response;
-	                $scope.resStatus = 'info';
-	            }, function (error) {
-	                $scope.res = error;
-	                $scope.resStatus = 'danger';
-	            });
-	        };
-	
-	        $scope.create = function (isValid) {
-	            if (isValid) {
-	                var plan = new Plans({
-	                    title: this.title,
-	                    content: this.content
-	                });
-	                plan.$save(function (response) {
-	                    $location.path('plan/' + response._id);
-	                });
-	
-	                this.title = '';
-	                this.content = '';
-	            } else {
-	                $scope.submitted = true;
-	            }
-	        };
-	
-	        $scope.remove = function (plan) {
-	            if (plan) {
-	                plan.$remove();
-	
-	                for (var i in $scope.plans) {
-	                    if ($scope.plans[i] === plan) {
-	                        $scope.plans.splice(i, 1);
-	                    }
-	                }
-	            } else {
-	                $scope.plan.$remove(function (response) {
-	                    $location.path('plans');
-	                });
-	            }
-	        };
-	
-	        $scope.update = function (isValid) {
-	            if (isValid) {
-	                var plan = $scope.plan;
-	                if (!plan.updated) {
-	                    plan.updated = [];
-	                }
-	                plan.updated.push(new Date().getTime());
-	
-	                plan.$update(function () {
-	                    $location.path('plan/' + plan._id);
-	                });
-	            } else {
-	                $scope.submitted = true;
-	            }
-	        };
-	
-	        $scope.find = function () {
-	            Plans.query(function (plans) {
-	                $scope.plans = plans;
-	            });
-	        };
-	
-	        $scope.findOne = function () {
-	            Plans.get({
-	                planId: $stateParams.planId
-	            }, function (plan) {
-	                $scope.plan = plan;
-	            });
-	        };
-	    }
-	
-	    angular.module('mean.plan').controller('PlanController', PlanController);
-	
-	    PlanController.$inject = ['$scope', 'Global', 'Plans', '$stateParams', '$location'];
-	})();
-
-/***/ },
-/* 43 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-	
-	__webpack_require__(44);
-
-/***/ },
-/* 44 */
-/***/ function(module, exports, __webpack_require__) {
-
-	// style-loader: Adds some css to the DOM by adding a <style> tag
-	
-	// load the styles
-	var content = __webpack_require__(45);
-	if(typeof content === 'string') content = [[module.id, content, '']];
-	// add the styles to the DOM
-	var update = __webpack_require__(4)(content, {});
-	if(content.locals) module.exports = content.locals;
-	// Hot Module Replacement
-	if(false) {
-		// When the styles change, update the <style> tags
-		if(!content.locals) {
-			module.hot.accept("!!./../../../../../../node_modules/css-loader/index.js!./plan.css", function() {
-				var newContent = require("!!./../../../../../../node_modules/css-loader/index.js!./plan.css");
-				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-				update(newContent);
-			});
-		}
-		// When the module is disposed, remove the <style> tags
-		module.hot.dispose(function() { update(); });
-	}
-
-/***/ },
-/* 45 */
-/***/ function(module, exports, __webpack_require__) {
-
-	exports = module.exports = __webpack_require__(3)();
-	// imports
-	
-	
-	// module
-	exports.push([module.id, ".plan-example span {\n    font-weight: bold;\n}\n", ""]);
-	
-	// exports
-
-
-/***/ },
-/* 46 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	(function () {
-	    'use strict';
-	
-	    function Plan($stateProvider) {
-	        $stateProvider.state('plan show all', {
-	            url: '/plan/showall',
-	            templateUrl: 'plan/views/index.html'
-	        }).state('plan circles example', {
-	            url: '/plan/showall/:circle',
-	            templateUrl: 'plan/views/example.html'
-	        }).state('all plans', {
-	            url: '/plans',
-	            templateUrl: 'plan/views/list.html'
-	        }).state('create plan', {
-	            url: '/plan/create',
-	            templateUrl: 'plan/views/create.html'
-	        }).state('edit plan', {
-	            url: '/plan/:planId/edit',
-	            templateUrl: 'plan/views/edit.html'
-	        }).state('plan by id', {
-	            url: '/plans/:planId',
-	            templateUrl: 'plan/views/view.html'
-	        });
-	    }
-	
-	    angular.module('mean.plan').config(Plan);
-	
-	    Plan.$inject = ['$stateProvider'];
-	})();
-
-/***/ },
-/* 47 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	//Plans service used for plans REST endpoint
-	
-	angular.module('mean.plan').factory('Plans', ['$resource', function ($resource) {
-	  return $resource('api/plans/:planId', {
-	    planId: '@_id'
-	  }, {
-	    update: {
-	      method: 'PUT'
-	    }
-	  });
-	}]);
-
-/***/ },
-/* 48 */
-/***/ function(module, exports) {
-
-	'use strict';
-	
-	(function () {
-	    'use strict';
-	
-	    /* jshint -W098 */
-	
 	    function RencanaController($scope, Global, Rencana, $stateParams) {
 	        $scope.global = Global;
 	        $scope.package = {
@@ -61637,10 +61435,10 @@
 	
 	        $scope.create = function (isValid) {
 	            if (isValid) {
-	                var rencana = new Rencana({
+	                var rencana = {
 	                    title: this.title,
 	                    content: this.content
-	                });
+	                };
 	
 	                Rencana.save(rencana).then(function (response) {
 	                    $scope.res = response;
@@ -61731,21 +61529,21 @@
 	})();
 
 /***/ },
-/* 49 */
+/* 43 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	__webpack_require__(50);
+	__webpack_require__(44);
 
 /***/ },
-/* 50 */
+/* 44 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(51);
+	var content = __webpack_require__(45);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(4)(content, {});
@@ -61765,7 +61563,7 @@
 	}
 
 /***/ },
-/* 51 */
+/* 45 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(3)();
@@ -61779,7 +61577,7 @@
 
 
 /***/ },
-/* 52 */
+/* 46 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -61804,7 +61602,7 @@
 	            url: '/rencana/:rencanaId/edit',
 	            templateUrl: 'rencana/views/edit.html'
 	        }).state('rencana by id', {
-	            url: '/rencanas/:rencanaId',
+	            url: '/rencana/:rencanaId',
 	            templateUrl: 'rencana/views/view.html'
 	        });
 	    }
@@ -61815,7 +61613,7 @@
 	})();
 
 /***/ },
-/* 53 */
+/* 47 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -61860,11 +61658,9 @@
 	            },
 	
 	            save: function save(rencana) {
-	                console.log("save rencana " + JSON.stringify(rencana));
 	                var deferred = $q.defer();
 	
 	                $http.post('/api/rencana/', rencana).success(function (response) {
-	                    console.log("save rencana success" + JSON.stringify(response));
 	                    deferred.resolve(response);
 	                }).error(function (response) {
 	                    deferred.reject(response);
@@ -61875,7 +61671,7 @@
 	            update: function update(rencana) {
 	                var deferred = $q.defer();
 	
-	                $http.put('/api/rencana/', rencana._id).success(function (response) {
+	                $http.put('/api/rencana/' + rencana._id, rencana).success(function (response) {
 	                    deferred.resolve(response);
 	                }).error(function (response) {
 	                    deferred.reject(response);
@@ -61886,7 +61682,7 @@
 	            remove: function remove(rencana) {
 	                var deferred = $q.defer();
 	
-	                $http.delete('/api/rencana/', rencana._id).success(function (response) {
+	                $http.delete('/api/rencana/' + rencana._id, rencana).success(function (response) {
 	                    deferred.resolve(response);
 	                }).error(function (response) {
 	                    deferred.reject(response);
@@ -61902,37 +61698,37 @@
 	})();
 
 /***/ },
-/* 54 */
+/* 48 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var map = {
-		"./meanio-admin/public/controllers/admin.js": 55,
-		"./meanio-admin/public/controllers/example.js": 56,
-		"./meanio-admin/public/controllers/modules.js": 57,
-		"./meanio-admin/public/controllers/settings.js": 58,
-		"./meanio-admin/public/controllers/themes.js": 59,
-		"./meanio-admin/public/controllers/users.js": 60,
-		"./meanio-admin/public/directives/editable.js": 61,
-		"./meanio-admin/public/index.js": 62,
-		"./meanio-admin/public/routes/admin.js": 67,
-		"./meanio-admin/public/services/module-settings.js": 68,
-		"./meanio-admin/public/services/modules.js": 69,
-		"./meanio-admin/public/services/settings.js": 70,
-		"./meanio-admin/public/services/users.js": 71,
-		"./meanio-circles/public/controllers/circles.js": 72,
-		"./meanio-circles/public/index.js": 73,
-		"./meanio-circles/public/routes/circles.js": 76,
-		"./meanio-circles/public/services/circles.js": 77,
-		"./meanio-system/public/routes/system.js": 78,
-		"./meanio-system/public/services/config.js": 79,
-		"./meanio-system/public/services/global.js": 80,
-		"./meanio-system/public/services/interceptor.js": 81,
-		"./meanio-system/public/services/menus.js": 82,
-		"./meanio-system/public/system.js": 83,
-		"./meanio-users/public/controllers/meanUser.js": 84,
-		"./meanio-users/public/index.js": 85,
-		"./meanio-users/public/routes/auth.js": 86,
-		"./meanio-users/public/services/meanUser.js": 87
+		"./meanio-admin/public/controllers/admin.js": 49,
+		"./meanio-admin/public/controllers/example.js": 50,
+		"./meanio-admin/public/controllers/modules.js": 51,
+		"./meanio-admin/public/controllers/settings.js": 52,
+		"./meanio-admin/public/controllers/themes.js": 53,
+		"./meanio-admin/public/controllers/users.js": 54,
+		"./meanio-admin/public/directives/editable.js": 55,
+		"./meanio-admin/public/index.js": 56,
+		"./meanio-admin/public/routes/admin.js": 61,
+		"./meanio-admin/public/services/module-settings.js": 62,
+		"./meanio-admin/public/services/modules.js": 63,
+		"./meanio-admin/public/services/settings.js": 64,
+		"./meanio-admin/public/services/users.js": 65,
+		"./meanio-circles/public/controllers/circles.js": 66,
+		"./meanio-circles/public/index.js": 67,
+		"./meanio-circles/public/routes/circles.js": 70,
+		"./meanio-circles/public/services/circles.js": 71,
+		"./meanio-system/public/routes/system.js": 72,
+		"./meanio-system/public/services/config.js": 73,
+		"./meanio-system/public/services/global.js": 74,
+		"./meanio-system/public/services/interceptor.js": 75,
+		"./meanio-system/public/services/menus.js": 76,
+		"./meanio-system/public/system.js": 77,
+		"./meanio-users/public/controllers/meanUser.js": 78,
+		"./meanio-users/public/index.js": 79,
+		"./meanio-users/public/routes/auth.js": 80,
+		"./meanio-users/public/services/meanUser.js": 81
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -61945,11 +61741,11 @@
 	};
 	webpackContext.resolve = webpackContextResolve;
 	module.exports = webpackContext;
-	webpackContext.id = 54;
+	webpackContext.id = 48;
 
 
 /***/ },
-/* 55 */
+/* 49 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -61993,7 +61789,7 @@
 
 
 /***/ },
-/* 56 */
+/* 50 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -62019,7 +61815,7 @@
 	]);
 
 /***/ },
-/* 57 */
+/* 51 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -62043,7 +61839,7 @@
 	]);
 
 /***/ },
-/* 58 */
+/* 52 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -62143,7 +61939,7 @@
 
 
 /***/ },
-/* 59 */
+/* 53 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -62200,7 +61996,7 @@
 
 
 /***/ },
-/* 60 */
+/* 54 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -62311,7 +62107,7 @@
 
 
 /***/ },
-/* 61 */
+/* 55 */
 /***/ function(module, exports) {
 
 	angular.module('mean.admin').directive('ngEnter', function() {
@@ -62395,24 +62191,24 @@
 
 
 /***/ },
-/* 62 */
+/* 56 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	__webpack_require__(63);
-	window.ZeroClipboard = __webpack_require__(65);
-	__webpack_require__(66);
+	__webpack_require__(57);
+	window.ZeroClipboard = __webpack_require__(59);
+	__webpack_require__(60);
 
 
 /***/ },
-/* 63 */
+/* 57 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(64);
+	var content = __webpack_require__(58);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(4)(content, {});
@@ -62432,7 +62228,7 @@
 	}
 
 /***/ },
-/* 64 */
+/* 58 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(3)();
@@ -62446,7 +62242,7 @@
 
 
 /***/ },
-/* 65 */
+/* 59 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -65032,14 +64828,14 @@
 	}());
 
 /***/ },
-/* 66 */
+/* 60 */
 /***/ function(module, exports) {
 
 	/*! ng-clip 16-12-2014 */
 	!function(a,b){"use strict";b.module("ngClipboard",[]).provider("ngClip",function(){var a=this;return this.path="//cdnjs.cloudflare.com/ajax/libs/zeroclipboard/2.1.6/ZeroClipboard.swf",{setPath:function(b){a.path=b},setConfig:function(b){a.config=b},$get:function(){return{path:a.path,config:a.config}}}}).run(["ngClip",function(a){var c={swfPath:a.path,trustedDomains:["*"],allowScriptAccess:"always",forceHandCursor:!0};ZeroClipboard.config(b.extend(c,a.config||{}))}]).directive("clipCopy",["ngClip",function(){return{scope:{clipCopy:"&",clipClick:"&",clipClickFallback:"&"},restrict:"A",link:function(a,c,d){if(ZeroClipboard.isFlashUnusable())return void c.bind("click",function(b){a.$apply(a.clipClickFallback({$event:b,copy:a.$eval(a.clipCopy)}))});var e=new ZeroClipboard(c);""===d.clipCopy&&(a.clipCopy=function(){return c[0].previousElementSibling.innerText}),e.on("ready",function(){e.on("copy",function(b){var c=b.clipboardData;c.setData(d.clipCopyMimeType||"text/plain",a.$eval(a.clipCopy))}),e.on("aftercopy",function(){b.isDefined(d.clipClick)&&a.$apply(a.clipClick)}),a.$on("$destroy",function(){e.destroy()})})}}}])}(window,window.angular);
 
 /***/ },
-/* 67 */
+/* 61 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -65085,7 +64881,7 @@
 	  ]);
 
 /***/ },
-/* 68 */
+/* 62 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -65130,7 +64926,7 @@
 	]);
 
 /***/ },
-/* 69 */
+/* 63 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -65148,7 +64944,7 @@
 	]);
 
 /***/ },
-/* 70 */
+/* 64 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -65186,7 +64982,7 @@
 
 
 /***/ },
-/* 71 */
+/* 65 */
 /***/ function(module, exports) {
 
 	//Users service used for users REST endpoint
@@ -65204,7 +65000,7 @@
 
 
 /***/ },
-/* 72 */
+/* 66 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -65237,21 +65033,21 @@
 
 
 /***/ },
-/* 73 */
+/* 67 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	__webpack_require__(74);
+	__webpack_require__(68);
 
 /***/ },
-/* 74 */
+/* 68 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(75);
+	var content = __webpack_require__(69);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(4)(content, {});
@@ -65271,7 +65067,7 @@
 	}
 
 /***/ },
-/* 75 */
+/* 69 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(3)();
@@ -65285,7 +65081,7 @@
 
 
 /***/ },
-/* 76 */
+/* 70 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -65339,7 +65135,7 @@
 
 
 /***/ },
-/* 77 */
+/* 71 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -65369,7 +65165,7 @@
 
 
 /***/ },
-/* 78 */
+/* 72 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -65422,7 +65218,7 @@
 
 
 /***/ },
-/* 79 */
+/* 73 */
 /***/ function(module, exports) {
 
 	angular.module('mean.system').provider('$meanConfig', [function() {
@@ -65451,7 +65247,7 @@
 
 
 /***/ },
-/* 80 */
+/* 74 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -65575,7 +65371,7 @@
 
 
 /***/ },
-/* 81 */
+/* 75 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -65613,7 +65409,7 @@
 
 
 /***/ },
-/* 82 */
+/* 76 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -65629,7 +65425,7 @@
 
 
 /***/ },
-/* 83 */
+/* 77 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -65650,7 +65446,7 @@
 
 
 /***/ },
-/* 84 */
+/* 78 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -65768,7 +65564,7 @@
 	  ]);
 
 /***/ },
-/* 85 */
+/* 79 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -65776,7 +65572,7 @@
 	__webpack_require__(26);
 
 /***/ },
-/* 86 */
+/* 80 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -65795,7 +65591,7 @@
 
 
 /***/ },
-/* 87 */
+/* 81 */
 /***/ function(module, exports) {
 
 	'use strict';

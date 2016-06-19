@@ -18,8 +18,8 @@ Rencana.register(function(app, auth, database, circles) {
 
   //We are adding a link to the main menu for all authenticated users
   Rencana.menus.add({
-    title: 'rencana example page',
-    link: 'rencana example page',
+    title: 'Perencanaan',
+    link: 'all rencanas',
     roles: ['authenticated'],
     menu: 'main'
   });

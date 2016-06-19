@@ -39,7 +39,7 @@
         });
         
         app.get('/api/rencana/:rencanaId', function(req, res) {
-            rencana.show(req, res);
+            rencana.show(req, res)
         });
         
         app.put('/api/rencana/:rencanaId', requiresLogin, function(req, res) {
@@ -49,5 +49,7 @@
         app.delete('/api/rencana/:rencanaId', requiresLogin, function(req, res) {
             rencana.destroy(req, res);
         });
+        
+        app.param('rencanaId', rencana.Rencana);
     };
 })();

@@ -41,11 +41,9 @@
             },
             
             save: function(rencana) {
-                console.log("save rencana " + JSON.stringify(rencana));
                 var deferred = $q.defer();
 
                 $http.post('/api/rencana/', rencana).success(function(response) {
-                    console.log("save rencana success" + JSON.stringify(response));
                     deferred.resolve(response);
                 }).error(function(response) {
                     deferred.reject(response);
@@ -57,7 +55,7 @@
             update: function(rencana) {
                 var deferred = $q.defer();
 
-                $http.put('/api/rencana/', rencana._id).success(function(response) {
+                $http.put('/api/rencana/'+ rencana._id, rencana).success(function(response) {
                     deferred.resolve(response);
                 }).error(function(response) {
                     deferred.reject(response);
@@ -69,7 +67,7 @@
             remove: function(rencana) {
                 var deferred = $q.defer();
 
-                $http.delete('/api/rencana/', rencana._id).success(function(response) {
+                $http.delete('/api/rencana/'+ rencana._id, rencana).success(function(response) {
                     deferred.resolve(response);
                 }).error(function(response) {
                     deferred.reject(response);

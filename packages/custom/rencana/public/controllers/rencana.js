@@ -20,13 +20,11 @@
         };
 
         $scope.create = function (isValid) {
-            console.log("create rencana " + isValid);
             if (isValid) {
                 var rencana = {
                     title: this.title,
                     content: this.content
                 };
-                console.log("create rencana " + JSON.stringify(rencana));
 
                 Rencana.save(rencana).then(function (response) {
                     $scope.res = response;

@@ -18,7 +18,7 @@
             url: '/rencana/:rencanaId/edit',
             templateUrl: 'rencana/views/edit.html'
         }).state('rencana by id', {
-            url: '/rencanas/:rencanaId',
+            url: '/rencana/:rencanaId',
             templateUrl: 'rencana/views/view.html'
         });
     }
