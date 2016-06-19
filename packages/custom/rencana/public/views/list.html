@@ -1,0 +1,21 @@
+<section data-ng-controller="RencanaController" data-ng-init="find()">
+  <ul class="rencanas unstyled">
+    <li data-ng-repeat="rencana in rencanas">
+      <span>{{rencana.created | date:'medium'}}</span> /
+      <span>{{rencana.user.name}}</span>
+      <h2>
+        <a data-ng-href="/rencana/{{rencana._id}}">{{rencana.title}}</a>
+        <span>
+          <a class="btn" href="/rencana/{{rencana._id}}/edit">
+            <i class="glyphicon glyphicon-edit"></i>
+          </a>
+          <a class="btn" data-ng-click="remove(rencana);">
+            <i class="glyphicon glyphicon-trash"></i>
+          </a>
+        </span>
+      </h2>
+      <div>{{rencana.content}}</div>
+    </li>
+  </ul>
+  <h1 data-ng-hide="!rencanas || rencanas.length">No rencanas yet. <br> Why don't you <a href="/rencana/create">Create One</a>?</h1>
+</section>

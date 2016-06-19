@@ -99,7 +99,7 @@
 	
 	    var req = __webpack_require__(29);
 	    req.keys().map(req);
-	    req = __webpack_require__(42);
+	    req = __webpack_require__(54);
 	    req.keys().map(req);
 	
 	    angular.module('mean', packageModules);
@@ -61035,7 +61035,15 @@
 		"./custom/ciptakarya/public/controllers/starter.js": 32,
 		"./custom/ciptakarya/public/index.js": 33,
 		"./custom/ciptakarya/public/routes/system.js": 40,
-		"./custom/ciptakarya/public/routes/users.js": 41
+		"./custom/ciptakarya/public/routes/users.js": 41,
+		"./custom/plan/public/controllers/plan.js": 42,
+		"./custom/plan/public/index.js": 43,
+		"./custom/plan/public/routes/plan.js": 46,
+		"./custom/plan/public/services/plan.js": 47,
+		"./custom/rencana/public/controllers/rencana.js": 48,
+		"./custom/rencana/public/index.js": 49,
+		"./custom/rencana/public/routes/rencana.js": 52,
+		"./custom/rencana/public/services/rencana.js": 53
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -61404,36 +61412,527 @@
 
 /***/ },
 /* 42 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	(function () {
+	    'use strict';
+	
+	    /* jshint -W098 */
+	
+	    function PlanController($scope, Global, Plans, $stateParams, $location) {
+	        $scope.global = Global;
+	        $scope.package = {
+	            name: 'plan'
+	        };
+	
+	        $scope.checkCircle = function () {
+	            Plan.checkCircle($stateParams.circle).then(function (response) {
+	                $scope.res = response;
+	                $scope.resStatus = 'info';
+	            }, function (error) {
+	                $scope.res = error;
+	                $scope.resStatus = 'danger';
+	            });
+	        };
+	
+	        $scope.create = function (isValid) {
+	            if (isValid) {
+	                var plan = new Plans({
+	                    title: this.title,
+	                    content: this.content
+	                });
+	                plan.$save(function (response) {
+	                    $location.path('plan/' + response._id);
+	                });
+	
+	                this.title = '';
+	                this.content = '';
+	            } else {
+	                $scope.submitted = true;
+	            }
+	        };
+	
+	        $scope.remove = function (plan) {
+	            if (plan) {
+	                plan.$remove();
+	
+	                for (var i in $scope.plans) {
+	                    if ($scope.plans[i] === plan) {
+	                        $scope.plans.splice(i, 1);
+	                    }
+	                }
+	            } else {
+	                $scope.plan.$remove(function (response) {
+	                    $location.path('plans');
+	                });
+	            }
+	        };
+	
+	        $scope.update = function (isValid) {
+	            if (isValid) {
+	                var plan = $scope.plan;
+	                if (!plan.updated) {
+	                    plan.updated = [];
+	                }
+	                plan.updated.push(new Date().getTime());
+	
+	                plan.$update(function () {
+	                    $location.path('plan/' + plan._id);
+	                });
+	            } else {
+	                $scope.submitted = true;
+	            }
+	        };
+	
+	        $scope.find = function () {
+	            Plans.query(function (plans) {
+	                $scope.plans = plans;
+	            });
+	        };
+	
+	        $scope.findOne = function () {
+	            Plans.get({
+	                planId: $stateParams.planId
+	            }, function (plan) {
+	                $scope.plan = plan;
+	            });
+	        };
+	    }
+	
+	    angular.module('mean.plan').controller('PlanController', PlanController);
+	
+	    PlanController.$inject = ['$scope', 'Global', 'Plans', '$stateParams', '$location'];
+	})();
+
+/***/ },
+/* 43 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	__webpack_require__(44);
+
+/***/ },
+/* 44 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+	
+	// load the styles
+	var content = __webpack_require__(45);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(4)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../../../../../node_modules/css-loader/index.js!./plan.css", function() {
+				var newContent = require("!!./../../../../../../node_modules/css-loader/index.js!./plan.css");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 45 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(3)();
+	// imports
+	
+	
+	// module
+	exports.push([module.id, ".plan-example span {\n    font-weight: bold;\n}\n", ""]);
+	
+	// exports
+
+
+/***/ },
+/* 46 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	(function () {
+	    'use strict';
+	
+	    function Plan($stateProvider) {
+	        $stateProvider.state('plan show all', {
+	            url: '/plan/showall',
+	            templateUrl: 'plan/views/index.html'
+	        }).state('plan circles example', {
+	            url: '/plan/showall/:circle',
+	            templateUrl: 'plan/views/example.html'
+	        }).state('all plans', {
+	            url: '/plans',
+	            templateUrl: 'plan/views/list.html'
+	        }).state('create plan', {
+	            url: '/plan/create',
+	            templateUrl: 'plan/views/create.html'
+	        }).state('edit plan', {
+	            url: '/plan/:planId/edit',
+	            templateUrl: 'plan/views/edit.html'
+	        }).state('plan by id', {
+	            url: '/plans/:planId',
+	            templateUrl: 'plan/views/view.html'
+	        });
+	    }
+	
+	    angular.module('mean.plan').config(Plan);
+	
+	    Plan.$inject = ['$stateProvider'];
+	})();
+
+/***/ },
+/* 47 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	//Plans service used for plans REST endpoint
+	
+	angular.module('mean.plan').factory('Plans', ['$resource', function ($resource) {
+	  return $resource('api/plans/:planId', {
+	    planId: '@_id'
+	  }, {
+	    update: {
+	      method: 'PUT'
+	    }
+	  });
+	}]);
+
+/***/ },
+/* 48 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	(function () {
+	    'use strict';
+	
+	    /* jshint -W098 */
+	
+	    function RencanaController($scope, Global, Rencana, $stateParams) {
+	        $scope.global = Global;
+	        $scope.package = {
+	            name: 'rencana'
+	        };
+	
+	        $scope.checkCircle = function () {
+	            Rencana.checkCircle($stateParams.circle).then(function (response) {
+	                $scope.res = response;
+	                $scope.resStatus = 'info';
+	            }, function (error) {
+	                $scope.res = error;
+	                $scope.resStatus = 'danger';
+	            });
+	        };
+	
+	        $scope.create = function (isValid) {
+	            if (isValid) {
+	                var rencana = new Rencana({
+	                    title: this.title,
+	                    content: this.content
+	                });
+	
+	                Rencana.save(rencana).then(function (response) {
+	                    $scope.res = response;
+	                    $scope.resStatus = 'info';
+	                }, function (error) {
+	                    $scope.res = error;
+	                    $scope.resStatus = 'danger';
+	                });
+	
+	                this.title = '';
+	                this.content = '';
+	            } else {
+	                $scope.submitted = true;
+	            }
+	        };
+	
+	        $scope.remove = function (rencana) {
+	            if (rencana) {
+	                Rencana.remove(rencana).then(function (response) {
+	                    $scope.res = response;
+	                    $scope.resStatus = 'info';
+	                }, function (error) {
+	                    $scope.res = error;
+	                    $scope.resStatus = 'danger';
+	                });
+	
+	                for (var i in $scope.rencanas) {
+	                    if ($scope.rencanas[i] === rencana) {
+	                        $scope.rencanas.splice(i, 1);
+	                    }
+	                }
+	            } else {
+	                Rencana.remove($scope.rencana).then(function (response) {
+	                    $scope.res = response;
+	                    $scope.resStatus = 'info';
+	                }, function (error) {
+	                    $scope.res = error;
+	                    $scope.resStatus = 'danger';
+	                });
+	            }
+	        };
+	
+	        $scope.update = function (isValid) {
+	            if (isValid) {
+	                var rencana = $scope.rencana;
+	                if (!rencana.updated) {
+	                    rencana.updated = [];
+	                }
+	                rencana.updated.push(new Date().getTime());
+	                Rencana.update(rencana).then(function (response) {
+	                    $scope.res = response;
+	                    $scope.resStatus = 'info';
+	                }, function (error) {
+	                    $scope.res = error;
+	                    $scope.resStatus = 'danger';
+	                });
+	            } else {
+	                $scope.submitted = true;
+	            }
+	        };
+	
+	        $scope.find = function () {
+	            Rencana.find().then(function (response) {
+	                $scope.res = response;
+	                $scope.resStatus = 'info';
+	                $scope.rencanas = response;
+	            }, function (error) {
+	                $scope.res = error;
+	                $scope.resStatus = 'danger';
+	            });
+	        };
+	
+	        $scope.findOne = function () {
+	            Rencana.findOne($stateParams.rencanaId).then(function (response) {
+	                $scope.res = response;
+	                $scope.resStatus = 'info';
+	                $scope.rencana = response;
+	            }, function (error) {
+	                $scope.res = error;
+	                $scope.resStatus = 'danger';
+	            });
+	        };
+	    }
+	
+	    angular.module('mean.rencana').controller('RencanaController', RencanaController);
+	
+	    RencanaController.$inject = ['$scope', 'Global', 'Rencana', '$stateParams'];
+	})();
+
+/***/ },
+/* 49 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	__webpack_require__(50);
+
+/***/ },
+/* 50 */
+/***/ function(module, exports, __webpack_require__) {
+
+	// style-loader: Adds some css to the DOM by adding a <style> tag
+	
+	// load the styles
+	var content = __webpack_require__(51);
+	if(typeof content === 'string') content = [[module.id, content, '']];
+	// add the styles to the DOM
+	var update = __webpack_require__(4)(content, {});
+	if(content.locals) module.exports = content.locals;
+	// Hot Module Replacement
+	if(false) {
+		// When the styles change, update the <style> tags
+		if(!content.locals) {
+			module.hot.accept("!!./../../../../../../node_modules/css-loader/index.js!./rencana.css", function() {
+				var newContent = require("!!./../../../../../../node_modules/css-loader/index.js!./rencana.css");
+				if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+				update(newContent);
+			});
+		}
+		// When the module is disposed, remove the <style> tags
+		module.hot.dispose(function() { update(); });
+	}
+
+/***/ },
+/* 51 */
+/***/ function(module, exports, __webpack_require__) {
+
+	exports = module.exports = __webpack_require__(3)();
+	// imports
+	
+	
+	// module
+	exports.push([module.id, ".rencana-example span {\n    font-weight: bold;\n}\n", ""]);
+	
+	// exports
+
+
+/***/ },
+/* 52 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	(function () {
+	    'use strict';
+	
+	    function Rencana($stateProvider) {
+	        $stateProvider.state('rencana example page', {
+	            url: '/rencana/example',
+	            templateUrl: 'rencana/views/index.html'
+	        }).state('rencana circles example', {
+	            url: '/rencana/example/:circle',
+	            templateUrl: 'rencana/views/example.html'
+	        }).state('all rencanas', {
+	            url: '/rencanas',
+	            templateUrl: 'rencana/views/list.html'
+	        }).state('create rencana', {
+	            url: '/rencana/create',
+	            templateUrl: 'rencana/views/create.html'
+	        }).state('edit rencana', {
+	            url: '/rencana/:rencanaId/edit',
+	            templateUrl: 'rencana/views/edit.html'
+	        }).state('rencana by id', {
+	            url: '/rencanas/:rencanaId',
+	            templateUrl: 'rencana/views/view.html'
+	        });
+	    }
+	
+	    angular.module('mean.rencana').config(Rencana);
+	
+	    Rencana.$inject = ['$stateProvider'];
+	})();
+
+/***/ },
+/* 53 */
+/***/ function(module, exports) {
+
+	'use strict';
+	
+	(function () {
+	    'use strict';
+	
+	    function Rencana($http, $q) {
+	        return {
+	            name: 'rencana',
+	            checkCircle: function checkCircle(circle) {
+	                var deferred = $q.defer();
+	
+	                $http.get('/api/rencana/example/' + circle).success(function (response) {
+	                    deferred.resolve(response);
+	                }).error(function (response) {
+	                    deferred.reject(response);
+	                });
+	                return deferred.promise;
+	            },
+	
+	            find: function find() {
+	                var deferred = $q.defer();
+	
+	                $http.get('/api/rencana/').success(function (response) {
+	                    deferred.resolve(response);
+	                }).error(function (response) {
+	                    deferred.reject(response);
+	                });
+	                return deferred.promise;
+	            },
+	
+	            findOne: function findOne(rencanaId) {
+	                var deferred = $q.defer();
+	
+	                $http.get('/api/rencana/' + rencanaId).success(function (response) {
+	                    deferred.resolve(response);
+	                }).error(function (response) {
+	                    deferred.reject(response);
+	                });
+	                return deferred.promise;
+	            },
+	
+	            save: function save(rencana) {
+	                console.log("save rencana " + JSON.stringify(rencana));
+	                var deferred = $q.defer();
+	
+	                $http.post('/api/rencana/', rencana).success(function (response) {
+	                    console.log("save rencana success" + JSON.stringify(response));
+	                    deferred.resolve(response);
+	                }).error(function (response) {
+	                    deferred.reject(response);
+	                });
+	                return deferred.promise;
+	            },
+	
+	            update: function update(rencana) {
+	                var deferred = $q.defer();
+	
+	                $http.put('/api/rencana/', rencana._id).success(function (response) {
+	                    deferred.resolve(response);
+	                }).error(function (response) {
+	                    deferred.reject(response);
+	                });
+	                return deferred.promise;
+	            },
+	
+	            remove: function remove(rencana) {
+	                var deferred = $q.defer();
+	
+	                $http.delete('/api/rencana/', rencana._id).success(function (response) {
+	                    deferred.resolve(response);
+	                }).error(function (response) {
+	                    deferred.reject(response);
+	                });
+	                return deferred.promise;
+	            }
+	        };
+	    }
+	
+	    angular.module('mean.rencana').factory('Rencana', Rencana);
+	
+	    Rencana.$inject = ['$http', '$q'];
+	})();
+
+/***/ },
+/* 54 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var map = {
-		"./meanio-admin/public/controllers/admin.js": 43,
-		"./meanio-admin/public/controllers/example.js": 44,
-		"./meanio-admin/public/controllers/modules.js": 45,
-		"./meanio-admin/public/controllers/settings.js": 46,
-		"./meanio-admin/public/controllers/themes.js": 47,
-		"./meanio-admin/public/controllers/users.js": 48,
-		"./meanio-admin/public/directives/editable.js": 49,
-		"./meanio-admin/public/index.js": 50,
-		"./meanio-admin/public/routes/admin.js": 55,
-		"./meanio-admin/public/services/module-settings.js": 56,
-		"./meanio-admin/public/services/modules.js": 57,
-		"./meanio-admin/public/services/settings.js": 58,
-		"./meanio-admin/public/services/users.js": 59,
-		"./meanio-circles/public/controllers/circles.js": 60,
-		"./meanio-circles/public/index.js": 61,
-		"./meanio-circles/public/routes/circles.js": 64,
-		"./meanio-circles/public/services/circles.js": 65,
-		"./meanio-system/public/routes/system.js": 66,
-		"./meanio-system/public/services/config.js": 67,
-		"./meanio-system/public/services/global.js": 68,
-		"./meanio-system/public/services/interceptor.js": 69,
-		"./meanio-system/public/services/menus.js": 70,
-		"./meanio-system/public/system.js": 71,
-		"./meanio-users/public/controllers/meanUser.js": 72,
-		"./meanio-users/public/index.js": 73,
-		"./meanio-users/public/routes/auth.js": 74,
-		"./meanio-users/public/services/meanUser.js": 75
+		"./meanio-admin/public/controllers/admin.js": 55,
+		"./meanio-admin/public/controllers/example.js": 56,
+		"./meanio-admin/public/controllers/modules.js": 57,
+		"./meanio-admin/public/controllers/settings.js": 58,
+		"./meanio-admin/public/controllers/themes.js": 59,
+		"./meanio-admin/public/controllers/users.js": 60,
+		"./meanio-admin/public/directives/editable.js": 61,
+		"./meanio-admin/public/index.js": 62,
+		"./meanio-admin/public/routes/admin.js": 67,
+		"./meanio-admin/public/services/module-settings.js": 68,
+		"./meanio-admin/public/services/modules.js": 69,
+		"./meanio-admin/public/services/settings.js": 70,
+		"./meanio-admin/public/services/users.js": 71,
+		"./meanio-circles/public/controllers/circles.js": 72,
+		"./meanio-circles/public/index.js": 73,
+		"./meanio-circles/public/routes/circles.js": 76,
+		"./meanio-circles/public/services/circles.js": 77,
+		"./meanio-system/public/routes/system.js": 78,
+		"./meanio-system/public/services/config.js": 79,
+		"./meanio-system/public/services/global.js": 80,
+		"./meanio-system/public/services/interceptor.js": 81,
+		"./meanio-system/public/services/menus.js": 82,
+		"./meanio-system/public/system.js": 83,
+		"./meanio-users/public/controllers/meanUser.js": 84,
+		"./meanio-users/public/index.js": 85,
+		"./meanio-users/public/routes/auth.js": 86,
+		"./meanio-users/public/services/meanUser.js": 87
 	};
 	function webpackContext(req) {
 		return __webpack_require__(webpackContextResolve(req));
@@ -61446,11 +61945,11 @@
 	};
 	webpackContext.resolve = webpackContextResolve;
 	module.exports = webpackContext;
-	webpackContext.id = 42;
+	webpackContext.id = 54;
 
 
 /***/ },
-/* 43 */
+/* 55 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -61494,7 +61993,7 @@
 
 
 /***/ },
-/* 44 */
+/* 56 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -61520,7 +62019,7 @@
 	]);
 
 /***/ },
-/* 45 */
+/* 57 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -61544,7 +62043,7 @@
 	]);
 
 /***/ },
-/* 46 */
+/* 58 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -61644,7 +62143,7 @@
 
 
 /***/ },
-/* 47 */
+/* 59 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -61701,7 +62200,7 @@
 
 
 /***/ },
-/* 48 */
+/* 60 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -61812,7 +62311,7 @@
 
 
 /***/ },
-/* 49 */
+/* 61 */
 /***/ function(module, exports) {
 
 	angular.module('mean.admin').directive('ngEnter', function() {
@@ -61896,24 +62395,24 @@
 
 
 /***/ },
-/* 50 */
+/* 62 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	__webpack_require__(51);
-	window.ZeroClipboard = __webpack_require__(53);
-	__webpack_require__(54);
+	__webpack_require__(63);
+	window.ZeroClipboard = __webpack_require__(65);
+	__webpack_require__(66);
 
 
 /***/ },
-/* 51 */
+/* 63 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(52);
+	var content = __webpack_require__(64);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(4)(content, {});
@@ -61933,7 +62432,7 @@
 	}
 
 /***/ },
-/* 52 */
+/* 64 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(3)();
@@ -61947,7 +62446,7 @@
 
 
 /***/ },
-/* 53 */
+/* 65 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -64533,14 +65032,14 @@
 	}());
 
 /***/ },
-/* 54 */
+/* 66 */
 /***/ function(module, exports) {
 
 	/*! ng-clip 16-12-2014 */
 	!function(a,b){"use strict";b.module("ngClipboard",[]).provider("ngClip",function(){var a=this;return this.path="//cdnjs.cloudflare.com/ajax/libs/zeroclipboard/2.1.6/ZeroClipboard.swf",{setPath:function(b){a.path=b},setConfig:function(b){a.config=b},$get:function(){return{path:a.path,config:a.config}}}}).run(["ngClip",function(a){var c={swfPath:a.path,trustedDomains:["*"],allowScriptAccess:"always",forceHandCursor:!0};ZeroClipboard.config(b.extend(c,a.config||{}))}]).directive("clipCopy",["ngClip",function(){return{scope:{clipCopy:"&",clipClick:"&",clipClickFallback:"&"},restrict:"A",link:function(a,c,d){if(ZeroClipboard.isFlashUnusable())return void c.bind("click",function(b){a.$apply(a.clipClickFallback({$event:b,copy:a.$eval(a.clipCopy)}))});var e=new ZeroClipboard(c);""===d.clipCopy&&(a.clipCopy=function(){return c[0].previousElementSibling.innerText}),e.on("ready",function(){e.on("copy",function(b){var c=b.clipboardData;c.setData(d.clipCopyMimeType||"text/plain",a.$eval(a.clipCopy))}),e.on("aftercopy",function(){b.isDefined(d.clipClick)&&a.$apply(a.clipClick)}),a.$on("$destroy",function(){e.destroy()})})}}}])}(window,window.angular);
 
 /***/ },
-/* 55 */
+/* 67 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -64586,7 +65085,7 @@
 	  ]);
 
 /***/ },
-/* 56 */
+/* 68 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -64631,7 +65130,7 @@
 	]);
 
 /***/ },
-/* 57 */
+/* 69 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -64649,7 +65148,7 @@
 	]);
 
 /***/ },
-/* 58 */
+/* 70 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -64687,7 +65186,7 @@
 
 
 /***/ },
-/* 59 */
+/* 71 */
 /***/ function(module, exports) {
 
 	//Users service used for users REST endpoint
@@ -64705,7 +65204,7 @@
 
 
 /***/ },
-/* 60 */
+/* 72 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -64738,21 +65237,21 @@
 
 
 /***/ },
-/* 61 */
+/* 73 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 	
-	__webpack_require__(62);
+	__webpack_require__(74);
 
 /***/ },
-/* 62 */
+/* 74 */
 /***/ function(module, exports, __webpack_require__) {
 
 	// style-loader: Adds some css to the DOM by adding a <style> tag
 	
 	// load the styles
-	var content = __webpack_require__(63);
+	var content = __webpack_require__(75);
 	if(typeof content === 'string') content = [[module.id, content, '']];
 	// add the styles to the DOM
 	var update = __webpack_require__(4)(content, {});
@@ -64772,7 +65271,7 @@
 	}
 
 /***/ },
-/* 63 */
+/* 75 */
 /***/ function(module, exports, __webpack_require__) {
 
 	exports = module.exports = __webpack_require__(3)();
@@ -64786,7 +65285,7 @@
 
 
 /***/ },
-/* 64 */
+/* 76 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -64840,7 +65339,7 @@
 
 
 /***/ },
-/* 65 */
+/* 77 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -64870,7 +65369,7 @@
 
 
 /***/ },
-/* 66 */
+/* 78 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -64923,7 +65422,7 @@
 
 
 /***/ },
-/* 67 */
+/* 79 */
 /***/ function(module, exports) {
 
 	angular.module('mean.system').provider('$meanConfig', [function() {
@@ -64952,7 +65451,7 @@
 
 
 /***/ },
-/* 68 */
+/* 80 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -65076,7 +65575,7 @@
 
 
 /***/ },
-/* 69 */
+/* 81 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -65114,7 +65613,7 @@
 
 
 /***/ },
-/* 70 */
+/* 82 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -65130,7 +65629,7 @@
 
 
 /***/ },
-/* 71 */
+/* 83 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -65151,7 +65650,7 @@
 
 
 /***/ },
-/* 72 */
+/* 84 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -65269,7 +65768,7 @@
 	  ]);
 
 /***/ },
-/* 73 */
+/* 85 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -65277,7 +65776,7 @@
 	__webpack_require__(26);
 
 /***/ },
-/* 74 */
+/* 86 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -65296,7 +65795,7 @@
 
 
 /***/ },
-/* 75 */
+/* 87 */
 /***/ function(module, exports) {
 
 	'use strict';
