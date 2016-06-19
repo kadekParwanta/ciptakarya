@@ -22,8 +22,13 @@
         $scope.create = function (isValid) {
             if (isValid) {
                 var rencana = {
-                    title: this.title,
-                    content: this.content
+                    tahun: this.tahun,
+                    program: this.program,
+                    sub_program: this.sub_program,
+                    nama_kegiatan: this.nama_kegiatan,
+                    volume: this.volume,
+                    rencana_biaya: this.rencana_biaya,
+                    sumber_dana: this.sumber_dana
                 };
 
                 Rencana.save(rencana).then(function (response) {

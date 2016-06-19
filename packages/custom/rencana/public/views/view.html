@@ -1,7 +1,7 @@
 <section data-ng-controller="RencanaController" data-ng-init="findOne()">
   <span>{{rencana.created | date:'medium'}}</span> /
   <span>{{rencana.user.name}}</span>
-  <h2>{{rencana.title}}</h2>
+  <h2>{{rencana.program}}</h2>
   <div data-ng-if="hasAuthorization(rencana)">
     <a class="btn" href="/rencana/{{rencana._id}}/edit">
       <i class="glyphicon glyphicon-edit"></i>
@@ -10,5 +10,8 @@
       <i class="glyphicon glyphicon-trash"></i>
     </a>
   </div>
-  <div>{{rencana.content}}</div>
+  <div>Sub Program: {{rencana.sub_program}}</div>
+  <div>Nama Kegiatan: {{rencana.nama_kegiatan}}</div>
+  <div>Volume: {{rencana.volume}}</div>
+  <div>Rencana Biaya: {{rencana.rencana_biaya}}</div>
 </section>

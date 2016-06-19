@@ -4,7 +4,7 @@
       <span>{{rencana.created | date:'medium'}}</span> /
       <span>{{rencana.user.name}}</span>
       <h2>
-        <a data-ng-href="/rencana/{{rencana._id}}">{{rencana.title}}</a>
+        <a data-ng-href="/rencana/{{rencana._id}}">{{rencana.program}}</a>
         <span>
           <a class="btn" href="/rencana/{{rencana._id}}/edit">
             <i class="glyphicon glyphicon-edit"></i>
@@ -14,8 +14,8 @@
           </a>
         </span>
       </h2>
-      <div>{{rencana.content}}</div>
+      <div>{{rencana.nama_kegiatan}}</div>
     </li>
   </ul>
-  <h1 data-ng-hide="!rencanas || rencanas.length">No rencanas yet. <br> Why don't you <a href="/rencana/create">Create One</a>?</h1>
+  <h1 data-ng-hide="!rencanas || rencanas.length">No rencana yet. <br> Why don't you <a href="/rencana/create">Create One</a>?</h1>
 </section>
