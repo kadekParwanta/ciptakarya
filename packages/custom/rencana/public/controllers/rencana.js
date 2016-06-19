@@ -3,7 +3,7 @@
 
     /* jshint -W098 */
 
-    function RencanaController($scope, Global, Rencana, $stateParams) {
+    function RencanaController($scope, Global, Rencana, $stateParams, $state) {
         $scope.global = Global;
         $scope.package = {
             name: 'rencana'
@@ -29,6 +29,7 @@
                 Rencana.save(rencana).then(function (response) {
                     $scope.res = response;
                     $scope.resStatus = 'info';
+                    $state.go('all rencanas');
                 }, function (error) {
                     $scope.res = error;
                     $scope.resStatus = 'danger';
@@ -77,6 +78,7 @@
                 Rencana.update(rencana).then(function (response) {
                     $scope.res = response;
                     $scope.resStatus = 'info';
+                    $state.go('all rencanas');
                 }, function (error) {
                     $scope.res = error;
                     $scope.resStatus = 'danger';
@@ -114,6 +116,6 @@
         .module('mean.rencana')
         .controller('RencanaController', RencanaController);
 
-    RencanaController.$inject = ['$scope', 'Global', 'Rencana', '$stateParams'];
+    RencanaController.$inject = ['$scope', 'Global', 'Rencana', '$stateParams', '$state'];
 
 })();
