@@ -1,5 +1,5 @@
 <section data-ng-controller="RencanaController">
-  <form name="rencanaForm" class="form-horizontal col-md-6" role="form" data-ng-submit="create(rencanaForm.$valid)" novalidate>
+  <form name="rencanaForm" class="form-horizontal col-md-12" role="form" data-ng-submit="create(rencanaForm.$valid)" novalidate>
     <div class="form-group" ng-class="{ 'has-error' : submitted && rencanaForm.tahun.$invalid }">
       <label mean-token="'create-tahun'" class="col-md-3 control-label">Tahun</label>
       <div class="col-md-9">
@@ -36,10 +36,11 @@
     <div class="form-group" ng-class="{ 'has-error' : submitted}">
       <label mean-token="'create-volume'" class="col-md-3 control-label">Volume</label>
       <div class="col-md-6">
-       <input name="volume" type="text" class="form-control" data-ng-model="volume" id="volume" placeholder="contoh: 500m">
+       <input name="volume" type="text" class="col-md-3 form-control" data-ng-model="volume" id="volume" placeholder="contoh: 500m">
       </div>
       <div class="col-md-3">
-       <select name="unit" class="form-control" data-ng-model="unit" id="unit">
+       <select name="unit" class="col-md-3 form-control" data-ng-model="unit" id="unit">
+         <option value="">---Please select---</option>
          <option value="m">m</option>
          <option value="m2">m2</option>
          <option value="m3">m3</option>

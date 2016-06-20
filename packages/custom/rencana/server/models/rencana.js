@@ -32,8 +32,20 @@ var RencanaSchema = new Schema({
     type: String,
     required: true
   },
-  lokasi: {},
+  lokasi: {
+    kecamatan: {
+      type: String
+    },
+    desa:{
+      type: String
+    },
+    geo:{
+      type: [Number],  // [<longitude>, <latitude>]
+      index: '2d'
+    }
+  },
   volume: String,
+  unit: String,
   rencana_biaya: {
     type: Number,
     required: true
