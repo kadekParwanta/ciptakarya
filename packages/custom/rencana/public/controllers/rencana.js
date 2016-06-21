@@ -9,6 +9,136 @@
             name: 'rencana'
         };
 
+        $scope.listLokasi = [
+            {
+                kecamatan:'Bangli', 
+                desa: [
+                'Kelurahan Kubu',
+                'Desa Landih',
+                'Kelurahan Cempaga',
+                'Kelurahan Kawan',
+                'Kelurahan Bebalang',
+                'Desa Bunutin',
+                'Desa Kayubihi',
+                'Desa Pengotan',
+                'Desa Taman Bali'
+                ]
+            },
+            {
+                kecamatan:'Kintamani',
+                desa: [
+                'Desa Abang Songan',
+                'Desa Abuan',
+                'Desa Awan',
+                'Desa Bantang',
+                'Desa Banua',
+                'Desa Batu Dinding',
+                'Desa Batukaang',
+                'Desa Batur Selatan',
+                'Desa Batur Tengah',
+                'Desa Batur Utara',
+                'Desa Bayungcerik',
+                'Desa Bayunggede',
+                'Desa Belancan',
+                'Desa Belandingan',
+                'Desa Belanga',
+                'Desa Belantih',
+                'Desa Binyan',
+                'Desa Bonyoh',
+                'Desa Buahan',
+                'Desa Bunutin',
+                'Desa Catur',
+                'Desa Daup',
+                'Desa Dausa',
+                'Desa Gunungbau',
+                'Desa Katung',
+                'Desa Kedisan',
+                'Desa Kintamani',
+                'Desa Kutuh',
+                'Desa Langgahan',
+                'Desa Lembean',
+                'Desa Mangguh',
+                'Desa Manikliyu',
+                'Desa Mengani',
+                'Desa Pengejaran',
+                'Desa Pinggan',
+                'Desa Satra',
+                'Desa Sekaan',
+                'Desa Sekardadi',
+                'Desa Selulung',
+                'Desa Serahi',
+                'Desa Siyakin',
+                'Desa Songan A',
+                'Desa Songan B',
+                'Desa Subaya',
+                'Desa Sukawana',
+                'Desa Suter',
+                'Desa Terunyan',
+                'Desa Ulian']
+            },
+            {
+                kecamatan:'Susut', 
+                desa: [
+                'Desa Abuan',
+                'Desa Apuan',
+                'Desa Demulih',
+                'Desa Pengiangan',
+                'Desa Penglumbaran',
+                'Desa Selat',
+                'Desa Sulahan',
+                'Desa Susut',
+                'Desa Tiga']
+            },
+            {
+                kecamatan:'Tembuku', desa: [
+                'Desa Bangbang',
+                'Desa Jehem',
+                'Desa Peninjoan',
+                'Desa Tembuku',
+                'Desa Undisan',
+                'Desa Yangapi']
+            }
+        ]
+
+        $scope.sumberDana = [
+            'APBD KAB',
+            'APBD PROP',
+            'APBN',
+            'DAK',
+            'BBNKB',
+            'PHR'
+        ]
+
+        $scope.today = function () {
+            $scope.tahun = new Date().getFullYear();
+        };
+        $scope.today();
+
+        $scope.clear = function () {
+            $scope.tahun = null;
+        };
+
+        $scope.open = function ($event) {
+            $scope.status.opened = true;
+        };
+
+        $scope.setDate = function (year, month, day) {
+            $scope.tahun = new Date(year, month, day);
+        };
+
+        $scope.dateOptions = {
+            formatYear: 'yyyy',
+            startingDay: 1,
+            minMode: 'year'
+        };
+
+        $scope.formats = ['yyyy'];
+        $scope.format = $scope.formats[0];
+
+        $scope.status = {
+            opened: false
+        };
+
         $scope.checkCircle = function () {
             Rencana.checkCircle($stateParams.circle).then(function (response) {
                 $scope.res = response;
@@ -26,9 +156,17 @@
                     program: this.program,
                     sub_program: this.sub_program,
                     nama_kegiatan: this.nama_kegiatan,
+                    lokasi:{
+                        kecamatan:this.kecamatan.kecamatan,
+                        desa:this.desa,
+                        geo:this.geo
+                    },
                     volume: this.volume,
+                    unit: this.unit,
                     rencana_biaya: this.rencana_biaya,
-                    sumber_dana: this.sumber_dana
+                    sumber_dana: this.sumber_dana,
+                    proposal:this.proposal,
+                    no_reg_proposal:this.no_reg_proposal
                 };
 
                 Rencana.save(rencana).then(function (response) {
@@ -119,6 +257,17 @@
 
     angular
         .module('mean.rencana')
+        .filter('flatten', function () {
+            return function (array, kecamatan) {
+                if (!kecamatan) kecamatan = 'Bangli';
+                return array.reduce(function (flatten, group) {
+                    if (group.kecamatan == kecamatan) {
+                        flatten =  group.desa;
+                    }
+                    return flatten;
+                }, []);
+            }
+        })
         .controller('RencanaController', RencanaController);
 
     RencanaController.$inject = ['$scope', 'Global', 'Rencana', '$stateParams', '$state'];

@@ -1,12 +1,16 @@
 <section data-ng-controller="RencanaController" data-ng-init="findOne()">
-  <form name="rencanaForm" class="form-horizontal col-md-6" role="form" data-ng-submit="update(rencanaForm.$valid)" novalidate>
+  <form name="rencanaForm" class="form-horizontal col-md-12" role="form" data-ng-submit="update(rencanaForm.$valid)" novalidate>
     <div class="form-group" ng-class="{ 'has-error' : submitted && rencanaForm.tahun.$invalid }">
       <label mean-token="'edit-tahun'" class="col-md-3 control-label">Tahun</label>
       <div class="col-md-9">
-        <input name="tahun" type="text" class="form-control" data-ng-model="rencana.tahun" id="tahun" placeholder="contoh: 2015" required>
-        <div ng-show="submitted && rencanaForm.tahun.$invalid" class="help-block">
-          <p ng-show="rencanaForm.tahun.$error.required">Tahun is required</p>
-        </div>
+        <p class="input-group">
+              <input type="text" class="form-control" uib-datepicker-popup="{{format}}" 
+                ng-model="rencana.tahun" is-open="status.opened" 
+                datepicker-options="dateOptions" date-disabled="disabled(date, mode)" ng-required="true" close-text="Close" />
+              <span class="input-group-btn">
+                <button type="button" class="btn btn-default" ng-click="open()"><i class="glyphicon glyphicon-calendar"></i></button>
+              </span>
+            </p>
       </div>
     </div>
     <div class="form-group" ng-class="{ 'has-error' : submitted && rencanaForm.program.$invalid }">
@@ -27,19 +31,42 @@
     <div class="form-group" ng-class="{ 'has-error' : submitted && rencanaForm.nama_kegiatan.$invalid }">
       <label mean-token="'edit-nama_kegiatan'" class="col-md-3 control-label">Nama Kegiatan</label>
       <div class="col-md-9">
-        <input name="nama_kegiatan" type="text" class="form-control" data-ng-model="rencana.nama_kegiatan" id="nama_kegiatan" placeholder="contoh: Pembangunan jalan setapak di Ds. Tanggahan Peken" required>
+        <textarea name="nama_kegiatan" type="text" class="form-control" data-ng-model="rencana.nama_kegiatan" id="nama_kegiatan" placeholder="contoh: Pembangunan jalan setapak di Ds. Tanggahan Peken" required>
+        </textarea>
         <div ng-show="submitted && rencanaForm.nama_kegiatan.$invalid" class="help-block">
           <p ng-show="rencanaForm.nama_kegiatan.$error.required">Nama Kegiatan is required</p>
+        </div>
+      </div>
+    </div>
+    
+    <div class="form-group" ng-class="{ 'has-error' : submitted && rencanaForm.kecamatan.$invalid }">
+      <label mean-token="'edit-kecamatan'" class="col-md-3 control-label">Kecamatan</label>
+      <div class="col-md-9">
+        <select name="kecamatan" class="col-md-3 form-control" data-ng-model="rencana.lokasi.kecamatan" id="kecamatan" ng-options="lokasi.kecamatan for lokasi in listLokasi" required>
+          <option id="selected-kecamatan" ng-selected="rencana.lokasi.kecamatan">{{rencana.lokasi.kecamatan}}</option>
+       </select>
+        <div ng-show="submitted && rencanaForm.kecamatan.$invalid" class="help-block">
+          <p ng-show="rencanaForm.kecamatan.$error.required">Kecamatan is required</p>
+        </div>
+      </div>
+    </div>
+    <div class="form-group" ng-class="{ 'has-error' : submitted && rencanaForm.desa.$invalid }">
+      <label mean-token="'edit-desa'" class="col-md-3 control-label">Desa</label>
+      <div class="col-md-9">
+        <select name="desa" class="col-md-3 form-control" data-ng-model="rencana.lokasi.desa" id="desa" ng-disabled="!rencana.lokasi.kecamatan" ng-options="lokasi for lokasi in listLokasi | flatten:kecamatan.kecamatan" required>
+       </select>
+        <div ng-show="submitted && rencanaForm.desa.$invalid" class="help-block">
+          <p ng-show="rencanaForm.desa.$error.required">Desa is required</p>
         </div>
       </div>
     </div>
     <div class="form-group" ng-class="{ 'has-error' : submitted}">
       <label mean-token="'edit-volume'" class="col-md-3 control-label">Volume</label>
       <div class="col-md-6">
-       <input name="volume" type="text" class="col-md-3 form-control" data-ng-model="rencana.volume" id="volume" placeholder="contoh: 500m">
+       <input name="volume" type="text" class="col-md-3 form-control" data-ng-model="rencana.volume" id="volume" placeholder="contoh: 500">
       </div>
       <div class="col-md-3">
-       <select name="unit" class="col-md-3 form-control" data-ng-model="unit" id="unit">
+       <select name="unit" class="col-md-3 form-control" data-ng-model="rencana.unit" id="unit">
          <option value="">---Please select---</option>
          <option value="m">m</option>
          <option value="m2">m2</option>
@@ -54,9 +81,36 @@
     <div class="form-group" ng-class="{ 'has-error' : submitted && rencanaForm.rencana_biaya.$invalid }">
       <label mean-token="'edit-rencana_biaya'" class="col-md-3 control-label">Rencana Biaya</label>
       <div class="col-md-9">
-        <input name="rencana_biaya" type="text" class="form-control" data-ng-model="rencana.rencana_biaya" id="rencana_biaya" placeholder="contoh: 500000000" required>
+        <input name="rencana_biaya" type="number" class="form-control" data-ng-model="rencana.rencana_biaya" id="rencana_biaya" placeholder="contoh: 500000000" required>
         <div ng-show="submitted && rencanaForm.rencana_biaya.$invalid" class="help-block">
-          <p ng-show="rencanaForm.rencana_biaya.$error.required">rencana_biaya is required</p>
+          <p ng-show="rencanaForm.rencana_biaya.$error.required">Rencana Biaya is required</p>
+        </div>
+      </div>
+    </div>
+    <div class="form-group" ng-class="{ 'has-error' : submitted && rencanaForm.sumber_dana.$invalid }">
+      <label mean-token="'edit-sumber_dana'" class="col-md-3 control-label">Sumber dana</label>
+      <div class="col-md-9">
+        <select name="sumber_dana" class="col-md-3 form-control" data-ng-model="rencana.sumber_dana" id="sumber_dana" required>
+          <option ng-repeat="dana in sumberDana" value="{{dana}}">{{dana}}</option>
+       </select>
+        <div ng-show="submitted && rencanaForm.sumber_dana.$invalid" class="help-block">
+          <p ng-show="rencanaForm.sumber_dana.$error.required">Sumber dana is required</p>
+        </div>
+      </div>
+    </div>
+    <div class="form-group" ng-class="{ 'has-error' : submitted && rencanaForm.proposal.$invalid }">
+      <label mean-token="'edit-proposal'" class="col-md-3 control-label">Proposal</label>
+      <div class="col-md-9">
+        <label>
+          <input type="radio" ng-model="rencana.proposal" ng-value="true">
+          Ada
+        </label><br/>
+        <label>
+          <input type="radio" ng-model="rencana.proposal" ng-value="false">
+          Tidak Ada
+          </label><br/>
+        <div ng-show="submitted && rencanaForm.proposal.$invalid" class="help-block">
+          <p ng-show="rencanaForm.proposal.$error.required">Proposal is required</p>
         </div>
       </div>
     </div>
