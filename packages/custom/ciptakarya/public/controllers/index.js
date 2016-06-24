@@ -19,6 +19,12 @@ angular.module('mean.system').controller('IndexController', ['$scope', 'Global',
         'image': '/meanStarter/assets/img/cactus.png'
       }
     };
+    
+    $scope.features = [
+      {name:'Perencanaan',info:'Membuat Perencanaan menjadi lebih mudah'},
+      {name:'Pemeliharaan',info:'Mengontrol pelaksaan kegiatan'},
+      {name:'Aset',info:'Mengelola aset'},
+    ]
     $scope.packages = {
       'gmap': {
         'name': 'gmap',
