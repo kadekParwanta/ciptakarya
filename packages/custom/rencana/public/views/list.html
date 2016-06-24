@@ -1,21 +1,54 @@
 <section data-ng-controller="RencanaController" data-ng-init="find()">
-  <ul class="rencanas unstyled">
-    <li data-ng-repeat="rencana in rencanas">
-      <span>{{rencana.created | date:'medium'}}</span> /
-      <span>{{rencana.user.name}}</span>
-      <h2>
-        <a data-ng-href="/rencana/{{rencana._id}}">{{rencana.program}}</a>
-        <span>
-          <a class="btn" href="/rencana/{{rencana._id}}/edit">
+  <div class="row">
+    <div class="col-lg-12">
+      <h1 class="page-header">Plans</h1>
+      <table id="list-school" class="table table-striped">
+        <thead>
+          <tr>
+            <th></th>
+            <th>No</th>
+            <th>Tahun</th>
+            <th>Program</th>
+            <th>Sub Program</th>
+            <th>Nama Kegiatan</th>
+            <th>Kecamatan</th>
+            <th>Desa</th>
+            <th>Volume</th>
+            <th>Rencana Biaya</th>
+            <th>Sumber dana</th>
+            <th>Proposal</th>
+            <th>No Reg Proposal</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr ng-repeat="plan in rencanas track by $index">
+            <td><input type="checkbox" ng-model="plan.selected"></td>
+            <td>{{ $index }}</td>
+            <td>{{ plan.tahun }}</td>
+            <td><strong>{{ plan.program }}</strong></td>
+            <td>{{ plan.sub_program }}</td>
+            <td>{{ plan.nama_kegiatan }}</td>
+            <td>{{ plan.lokasi.kecamatan }}</td>
+            <td>{{ plan.lokasi.desa }}</td>
+            <td>{{ plan.volume }} {{plan.unit}}</td>
+            <td>{{ plan.rencana_biaya }}</td>
+            <td>{{ plan.sumber_dana }}</td>
+            <td>{{ plan.proposal }}</td>
+            <td>{{ plan.no_reg_proposal }}</td>
+            <td>
+              <span>
+          <a class="btn" href="/rencana/{{plan._id}}/edit">
             <i class="glyphicon glyphicon-edit"></i>
           </a>
-          <a class="btn" data-ng-click="remove(rencana);">
+          <a class="btn" data-ng-click="remove(plan);">
             <i class="glyphicon glyphicon-trash"></i>
           </a>
         </span>
-      </h2>
-      <div>{{rencana.nama_kegiatan}}</div>
-    </li>
-  </ul>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
   <h1 data-ng-hide="!rencanas || rencanas.length">No rencana yet. <br> Why don't you <a href="/rencana/create">Create One</a>?</h1>
 </section>
