@@ -54,6 +54,7 @@
       <label mean-token="'edit-desa'" class="col-md-3 control-label">Desa</label>
       <div class="col-md-9">
         <select name="desa" class="col-md-3 form-control" data-ng-model="rencana.lokasi.desa" id="desa" ng-disabled="!rencana.lokasi.kecamatan" ng-options="lokasi for lokasi in listLokasi | flatten:kecamatan.kecamatan" required>
+       <option id="selected-desa" ng-selected="rencana.lokasi.desa">{{rencana.lokasi.desa}}</option>
        </select>
         <div ng-show="submitted && rencanaForm.desa.$invalid" class="help-block">
           <p ng-show="rencanaForm.desa.$error.required">Desa is required</p>
@@ -112,6 +113,12 @@
         <div ng-show="submitted && rencanaForm.proposal.$invalid" class="help-block">
           <p ng-show="rencanaForm.proposal.$error.required">Proposal is required</p>
         </div>
+      </div>
+    </div>
+    <div class="form-group" ng-class="{ 'has-error' : submitted}">
+      <label mean-token="'edit-no_reg_proposal'" class="col-md-3 control-label">No Reg Proposal</label>
+      <div class="col-md-9">
+       <input name="no_reg_proposal" type="text" class="form-control" data-ng-model="rencana.no_reg_proposal" id="no_reg_proposal" ng-disabled="!rencana.proposal" placeholder="contoh: 12/12/2016">
       </div>
     </div>
     <div class="form-group">
