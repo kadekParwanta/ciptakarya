@@ -43,7 +43,32 @@ angular.module('mean.meanStarter').config(['$meanStateProvider', '$urlRouterProv
       .state('visimisi', {
         url: '/profil/visimisi',
         templateUrl: 'meanStarter/views/system/profil/visimisi.html'
-      });
+      })
+      .state('evaluasikegiatan', {
+        url: '/dbms/evaluasikegiatan',
+        templateUrl: 'meanStarter/views/system/dbms/evaluasikegiatan.html'
+      })
+      .state('indikator', {
+        url: '/dbms/indikator',
+        templateUrl: 'meanStarter/views/system/dbms/indikator.html'
+      })
+      .state('istilah', {
+        url: '/dbms/istilah',
+        templateUrl: 'meanStarter/views/system/dbms/istilah.html'
+      })
+      .state('manajemenkegiatan', {
+        url: '/dbms/manajemenkegiatan',
+        templateUrl: 'meanStarter/views/system/dbms/manajemenkegiatan.html'
+      })
+      .state('sekilas', {
+        url: '/dbms/sekilas',
+        templateUrl: 'meanStarter/views/system/dbms/sekilas.html'
+      })
+      .state('webgis', {
+        url: '/dbms/webgis',
+        templateUrl: 'meanStarter/views/system/dbms/webgis.html'
+      })
+      ;
   }
 ]).config(['$locationProvider',
   function($locationProvider) {
