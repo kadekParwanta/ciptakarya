@@ -11,6 +11,18 @@ angular.module('mean.meanStarter').config(['$meanStateProvider', '$urlRouterProv
       .state('home', {
         url: '/',
         templateUrl: 'meanStarter/views/system/index.html'
+      })
+      .state('informasi', {
+        url: '/informasi',
+        templateUrl: 'meanStarter/views/system/informasi.html'
+      })
+      .state('kebijakan', {
+        url: '/kebijakan',
+        templateUrl: 'meanStarter/views/system/kebijakan.html'
+      })
+      .state('pengumuman', {
+        url: '/pengumuman',
+        templateUrl: 'meanStarter/views/system/pengumuman.html'
       });
   }
 ]).config(['$locationProvider',

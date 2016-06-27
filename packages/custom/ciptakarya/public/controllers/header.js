@@ -56,6 +56,10 @@ angular.module('mean.system').controller('HeaderController', ['$scope', '$rootSc
       queryMenu('main', defaultMainMenu);
       $state.go('home');
     });
+    
+    $rootScope.$on('info', function() {
+      $state.go('beranda');
+    });
 
   }
 ]);

@@ -1,0 +1,19 @@
+<section class="container-fluid" data-ng-controller="InformasiController">
+  <header class="hero-unit" id="banner">
+  <div class="container">
+    <h1>Selamat Datang di Informasi</h1>
+    <img src="/meanStarter/assets/img/logo.png" alt="Ciptakarya">
+  </div>
+</header>
+
+<div class="container">
+  <div class="row">
+    <div class="col-lg-12">
+      <h1 class="page-header">Informasi:</h1>
+      <ul class="nav nav-tabs nav-stacked col-md-4 col-lg-4 col-sm-6" ng-repeat="thing in features">
+        <li><a href="#" uib-tooltip="{{thing.info}}">{{thing.name}}</a></li>
+      </ul>
+    </div>
+  </div>
+  </div>
+</section>
